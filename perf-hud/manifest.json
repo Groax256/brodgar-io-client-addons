@@ -1,7 +1,7 @@
 {
   "id": "perf-hud",
   "name": "Performance HUD",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "irongete",
   "description": "Displays frames per second and JVM heap memory usage in a lightweight native window.",
   "api_version": "1.0",
