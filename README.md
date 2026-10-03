@@ -65,27 +65,29 @@ version is a commit. If the upload fails the manifest is put back and nothing is
 | `essentials` | What the client does for a character the moment it enters the world: the toggles, the inventory and the movement speed, each a row in Options ▸ AddOns | `menugrid.use`, `speed.set` |
 | `eventstack` | A live log of what the client does: every message out, every update in, every event on the bus, and every widget coming and going — narrowed by session, widget and event, and one click for what a row carried | — |
 | `gob-cache-map` | Writes down every tree and boulder you walk past, and finds one again: search a name, pick a row, and the map goes there | — |
+| `hider` | Hides the kinds of object you tick — trees, bushes, boulders, stockpiles, walls and fences — and lays a patch on the ground each of them stands on, its colours picked in Options ▸ AddOns | — |
 | `hitboxes` | Draws the footprint of every game object in view, and of the building you are placing, on the ground — hidden by what stands in front of it, or drawn through everything; one key cycles the modes | — |
 | `hud` | Health, stamina and energy as three flat bars of their own, each placed with ALT and a drag and sized and coloured by a slider apiece; switched on, the client's own three meters are hidden | — |
 | `immersion` | Labels the nearest game object within a 180-degree cone in front of the character on screen with a floating "this", following it as you move and clearing it when nothing qualifies | `gob.click` |
 | `inspector-gadget` | A magnifying glass in the action menu | `menugrid.use`, `gob.click` |
 | `item-drop-protection` | With an item on the cursor: left click walks, Ctrl+left click drops | `player.move`, `widget.send` |
 | `item-indicators` | Two readings on every item icon: the quality it states, and the durability it has left | — |
+| `kith-kin-side-by-side` | Shows the Kin, Village and Realm tabs of the Kith & Kin window side by side, a line between them, and picking a player in one list picks them in the others | `widget.value` |
 | `object-radius-indicator` | A round patch laid on the ground under every object on its list that is in view, following it as it moves | — |
 | `paint` | Draw on the ground with the mouse | — |
+| `perf-hud` | Displays frames per second and JVM heap memory usage in a compact draggable window | — |
 | `profiler` | Where the frame went — a six-tab window over `hafen.client():profiling()` with the frame graph and phases, render passes and GL counters, per-widget and per-addon cost, the pull-only counters and the overhead accounting | `client.settings` |
 | `quick-search` | Press Ctrl+Space, type part of an action's name and run it without opening the action menu | `menugrid.use`, `client.settings`, `console.run` |
 | `resourcestack` | Every resource the client holds, as a searchable list — pick one and the panel shows its version, a preview of its image and every layer with what `layer:info()` decodes (image geometry, tooltip and pagina text, audio volume, neg and obst rings, anim frames, props and meta); Fetch asks the client for a name it has not loaded yet and follows the load or its error | — |
 | `session-manager` | One row per login the client holds: go to that character, log it out, or cycle to the next with a hotkey | `session.close` |
 | `simple-chat` | Replaces the client's chat with a window whose channels are tabs across the top, dragged by its body and resized from the bottom-right corner. Its System tab is a console line | `chat.send`, `console.run`, `widget.send` |
-| `simple-gob-hider` | One key hides the game objects whose resource is on its list and paints a yellow patch over the ground each of them stands on | — |
 | `simple-minimap` | Puts the corner minimap in a bare panel of its own, the claim, province and icon buttons in a row above it: no title, no close button, dragged from anywhere on it, sized by a grip in its corner, dressed by any theme that names it | — |
 | `stockpile-take` | Type how many items you want out of a stockpile and take them all with one press | `widget.send` |
 | `themes` | Loads whole client looks from JSON files in its own `themes/` folder and installs one | — |
 | `translations` | Displays the client in the language you pick in Options ▸ AddOns, and helps you write a new one: with the helper on, every string the language does not name yet is collected while you play, translated one by one in the translator window and exported as the JSON file a language ships as | — |
 | `trellis-builder` | Pick a block pile, a string pile and a patch of ground, press Start, and the character walks the route itself and fills the patch with trellises — as many per tile as the trellis's own footprint leaves room for | `player.move`, `gob.click`, `world.place`, `menugrid.use`, `widget.send` |
 | `voice` | Talk to the players near your character with a push-to-talk key, and hear each of them from the direction they stand in | `voice.connect` |
-| `wasd-movement` | Walk with W, A, S and D | `player.move`, `widget.send` |
+| `wasd-movement` | Walk with W, A, S and D, turn by moving the camera, and let go to stop | `player.move`, `widget.send` |
 | `water-meter` | A stamina-shaped bar counting every drop of water you are carrying | — |
 | `waypoints` | Queue movement orders and see where your character is headed with an on-map visual indicator | `player.move` |
 | `widgetstack` | What a widget is and how to name it — a live stack of the widgets under the cursor, a click-to-inspect window over `hafen.ui()`'s tree reads, a selector inspector that offers only selectors which actually resolve to the widget you are pointing at, and a live treeview of every widget the character has up, to expand, outline and inspect | — |
