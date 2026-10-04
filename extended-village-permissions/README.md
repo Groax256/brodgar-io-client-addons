@@ -4,6 +4,9 @@ A village or realm has 255 permission groups, numbered 0 to 254, but the client 
 squares to pick from. This addon puts a dropdown with every group beside those squares, so you can use
 the whole range.
 
+It also lays out the Kin, Village, and Realm tabs side by side in an extended view, with a line between
+neighbours, and picking a player in one list picks them in the others.
+
 ## Usage
 
 1. Open your village or realm window as usual — the **Village** and **Realm** tabs, and a member's own

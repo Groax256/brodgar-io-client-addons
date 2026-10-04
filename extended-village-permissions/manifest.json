@@ -6,7 +6,9 @@
   "description": "Assign up to 255 groups (0-254) beyond the client's native limit of eight, and type a group number into a village's member list to see only that group.",
   "api_version": "1.0",
   "files": [
-    "main.lua"
+    "main.lua",
+    "layout.lua",
+    "selection.lua"
   ],
   "permissions": [
     "widget.value"
