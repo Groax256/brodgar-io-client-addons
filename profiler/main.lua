@@ -184,16 +184,22 @@ local function capture()
   }
 end
 
--- Live: read just the one snapshot this tab needs. Paused: hand back the frozen one.
+-- The snapshots walk every widget tree (the widget breakdown names the character's widgets too), so they
+-- are never read from Draw or a click, which hold the addon layer's tree: the step, which holds none, takes
+-- them into `live` while the window is open, and a pause freezes the latest one.
+local live
 local function get(name)
-  if snap then return snap[name] end
-  if name == "history" then return p:history(G_N) end
-  return p[name](p)
+  local source = snap or live
+  return source and source[name] or {}
 end
+
+hafen.event():on("Update", function()
+  if win and not paused then live = capture() end
+end)
 
 local function pause(on)
   paused = on and true or false
-  snap = paused and capture() or nil
+  snap = paused and live or nil
   if not paused then sel = nil end
 end
 
@@ -827,6 +833,7 @@ end
 
 local function caught(f, a, b, w)
   local pn, pv = worst(f.phases)
+  live = capture()                                    -- on the step: a fresh one to freeze
   pause(true)                                         -- freeze the ring while the frame is still in it
   tab = 1
   sel = nil
