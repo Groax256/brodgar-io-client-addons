@@ -54,6 +54,17 @@ local FONT = hafen.font():get("mono"):derive():size(11)
 
 local function client() return hafen.client():options():client() end
 
+-- The profiling switch lives in the Options window, which belongs to the character's widget tree, while
+-- Draw, clicks and console lines run under the addon layer's tree: touching it from there takes a second
+-- tree monitor (one tree at a time). So the step, which holds none, mirrors it into `armed`, and every
+-- write is deferred to the step too.
+local armed = false
+hafen.event():on("Update", function() armed = client():profiling() end)
+local function setProfiling(on)
+  armed = on                                          -- show the new state now, before the step lands it
+  hafen.timer():after(0, function() client():profiling(on) end)
+end
+
 -- ------------------------------------------------------------------------------------ layout constants
 
 local WIN_W, WIN_H = 700, 470
@@ -287,7 +298,7 @@ local function drawFrameTab(g, w, h)
   local hist = get("history")
   if not f.ms and (#hist == 0) then
     g:color(200, 180, 120)
-    if client():profiling() then
+    if armed then
       g:text("armed -- waiting for the first sampled frame (arming takes effect on the NEXT frame)", 6, Y0)
     else
       g:text("profiling is off. Click the status line above, or tick Options > Client > Enable profiling.", 6, Y0)
@@ -343,7 +354,7 @@ local function drawPassesTab(g, w, h)
   local y = Y0
   if not ps.frameno then
     g:color(200, 180, 120)
-    g:text(client():profiling() and "armed -- waiting for the first frame whose GL timestamps come back"
+    g:text(armed and "armed -- waiting for the first frame whose GL timestamps come back"
                                  or "profiling is off -- the passes are armed-only", 6, y)
     g:color()
   else
@@ -398,7 +409,7 @@ local function drawWidgetsTab(g, w, h)
   local ws = get("widgets")
   if not ws.byType then
     g:color(200, 180, 120)
-    g:text(client():profiling() and "armed -- waiting for the first sampled frame"
+    g:text(armed and "armed -- waiting for the first sampled frame"
                                  or "profiling is off -- the widget breakdown is armed-only", 6, Y0)
     g:color()
     return
@@ -451,7 +462,7 @@ local function drawAddonsTab(g, w, h)
   local rows = get("addons")
   if not rows.total then
     g:color(200, 180, 120)
-    g:text(client():profiling() and "armed -- waiting for the first sampled frame"
+    g:text(armed and "armed -- waiting for the first sampled frame"
                                  or "profiling is off -- per-addon cost is armed-only", 6, Y0)
     g:color()
     return
@@ -643,7 +654,7 @@ local function drawChrome(g, w, h)
     g:color()
   end
   -- the clickable status line: the one switch, from here
-  local on = client():profiling()
+  local on = armed
   g:color(on and 140 or 200, on and 220 or 180, on and 140 or 120)
   g:text("profiling: " .. L(on and "ON" or "OFF", 4) ..
          ("(click to turn it %s)"):format(on and "off" or "on"), 6, Y_STATUS)
@@ -679,8 +690,7 @@ local function click(ev)
     p:reset()                                         -- empty the ring: clear, act, pause, scrub
     pause(false)
   elseif y < Y_STATUS + LINE then
-    local c = client()
-    c:profiling(not c:profiling())                    -- arity is the verb: one argument writes, and it chains
+    setProfiling(not armed)
   elseif (TABS[tab] == "frame") and (y >= G_Y) and (y <= G_Y + G_H) and
          (x >= G_X) and (x < G_X + G_N * G_BAR) then
     -- The timeline. A live graph shifts one bar per frame, so pointing at a bar only means something
@@ -876,8 +886,8 @@ end
 
 local function arm(ms)
   disarm()
-  if not client():profiling() then
-    client():profiling(true)                          -- the trap reads frame(), which is armed-only
+  if not armed then
+    setProfiling(true)                          -- the trap reads frame(), which is armed-only
     hafen.log():write("profiler: profiling armed -- the trap needs it")
   end
   trap = ms
@@ -922,7 +932,7 @@ hafen.console():on("profiler", function(args)
   if a == "" then
     toggle()
   elseif a == "on" or a == "off" then
-    client():profiling(a == "on")
+    setProfiling(a == "on")
     hafen.log():write(("profiler: profiling %s"):format(a:upper()))
   elseif a == "trap" then
     local b = (args[2] or ""):lower()
