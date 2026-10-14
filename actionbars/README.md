@@ -13,8 +13,8 @@ and pages between them. This addon puts that bar away and lets you have every pa
    the frame, the gaps between the buttons and any empty button all pick the bar up, so only a button with
    something in it keeps its click. Where you leave it is kept relative to the screen, so it stays put when
    you resize the game window or change the interface scale.
-3. Drag an action onto a button to put it there. Left-click fires it, right-click empties it, and resting
-   the pointer on one names what is in it.
+3. Drag an action, or a macro's icon from **Options ▸ Macros**, onto a button to put it there. Left-click
+   fires it, right-click empties it, and resting the pointer on one names what is in it.
 
 Each bar is one page of your belt: Actionbar2 is always slots 13–24, Actionbar3 always 25–36, and so on.
 Turn a bar off and back on and it comes back with the same slots, the same keys and the place you left it.

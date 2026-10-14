@@ -100,15 +100,17 @@ local function onPress(session, barNumber, upright, buttonCount, event)
     local slot = slotIndex and Slots.get(session, barNumber, slotIndex)
 
     -- A right press is the bar's wherever it lands, so the map underneath never sees it. On a button: a
-    -- slot held for an addon's entry is handed back (client-side, at once), any other is cleared (a server
-    -- round trip). Clearing a held slot would take the server's content under the hold, so the order matters.
+    -- slot held for an addon's entry or a macro is handed back (client-side, at once), any other is cleared
+    -- (a server round trip). Clearing a held slot would take the server's content under the hold, so the
+    -- order matters.
     if event:button() ~= 1 then
         event:preventDefault()
         if not slot then
             return
         end
         local ok, failure = pcall(function()
-            if slot:hold() then
+            local resourceName = slot:res()
+            if slot:hold() or (resourceName and resourceName:sub(1, 6) == "macro/") then
                 slot:hold(nil)
             else
                 slot:clear()
@@ -130,8 +132,9 @@ local function onPress(session, barNumber, upright, buttonCount, event)
 end
 
 -- A drag out of the action menu: thing = {kind = "pagina", res = <resource>}. An "addon/..." resource is a
--- menu entry an addon added (any addon's; the bar is one shared surface): the slot is held for it
--- client-side, the server never hears. Anything else is written to the slot and echoed back by the server.
+-- menu entry an addon added (any addon's; the bar is one shared surface), a "macro/..." one a macro dragged
+-- off the Macros page: the slot is held for it client-side, the server never hears. Anything else is written
+-- to the slot and echoed back by the server.
 local function onDrop(session, barNumber, upright, buttonCount, event)
     local slotIndex = Layout.slotAt(upright, buttonCount, event:x(), event:y())
     if not slotIndex then
@@ -158,6 +161,8 @@ local function onDrop(session, barNumber, upright, buttonCount, event)
             if entry then
                 slot:hold(entry)
             end
+        elseif thing.res:sub(1, 6) == "macro/" then
+            slot:hold(thing.res)
         else
             slot:res(thing.res)
         end
