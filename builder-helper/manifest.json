@@ -3,7 +3,7 @@
   "name": "Builder helper",
   "version": "0.1.0",
   "author": "irongete",
-  "description": "Remembers what every building site you have opened still needs, and one key floats each material's have/total over the site. Assign the key in Options > Game > Keybindings > Builder helper.",
+  "description": "Shows what each building site still needs, floating over the site. Toggle it with the key assigned in Options > Game > Keybindings > Builder helper.",
   "api_version": "1.0",
   "files": ["main.lua"]
 }

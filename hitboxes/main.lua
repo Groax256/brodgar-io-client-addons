@@ -55,17 +55,61 @@ local function addDropdown(root, caption, option, tooltip)
   hafen.ui():dropdown():parent(root):size(120):tooltip(tooltip):bind(option)
 end
 
+-- Every option, with the caption and hover text its control carries: on the Options page, and in a setup window
+-- through setup() below.
+local SETTINGS = {
+  {option = modeOption, label = "Footprints",
+   tooltip = "off, laid on the ground where each object stands, or drawn through everything in front of it"},
+  {option = fillOption, label = "Fill colour", tooltip = "the colour laid over the ground an object stands on"},
+  {option = opacityOption, label = "Fill opacity",
+   tooltip = "per cent: how much of the ground shows through the fill. 0 leaves only the border"},
+  {option = borderOption, label = "Border colour", tooltip = "the line round the footprint, always solid"},
+  {option = borderWidthOption, label = "Border thickness",
+   tooltip = "hundredths of a world unit, a tile is 11 units. 0 is the thinnest line the screen can draw; " ..
+             "to hide the border, give it the fill's colour"},
+}
+
 options:panel(function(root)
   root:gap(4)
-  addDropdown(root, "Footprints", modeOption,
-              "off, laid on the ground where each object stands, or drawn through everything in front of it")
-  addDropdown(root, "Fill colour", fillOption, "the colour laid over the ground an object stands on")
-  addSlider(root, "Fill opacity", opacityOption,
-            "per cent: how much of the ground shows through the fill. 0 leaves only the border")
-  addDropdown(root, "Border colour", borderOption, "the line round the footprint, always solid")
-  addSlider(root, "Border thickness", borderWidthOption,
-            "hundredths of a world unit, a tile is 11 units. 0 is the thinnest line the screen can draw; " ..
-            "to hide the border, give it the fill's colour")
+  for _, entry in ipairs(SETTINGS) do
+    if entry.option:type() == "number" then
+      addSlider(root, entry.label, entry.option, entry.tooltip)
+    else
+      addDropdown(root, entry.label, entry.option, entry.tooltip)
+    end
+  end
+end)
+
+-- What a setup window -- a bundle's first-run guide -- shows for this addon: every option, as the Options page
+-- does. Each entry is the option's own info() with its caption and hover text.
+local function setup()
+  local settings = {}
+  for _, entry in ipairs(SETTINGS) do
+    local info = entry.option:info()
+    info.label = entry.label
+    info.tooltip = entry.tooltip
+    settings[#settings + 1] = info
+  end
+  return {
+    title = "Hitboxes",
+    summary = "The footprint of every object, drawn on the ground.",
+    settings = settings,
+  }
+end
+
+-- Reads one option, or writes value first: its Changed handler below does the rest, as the Options page does.
+local function setting(name, value)
+  local option = options:option():get(name)
+  if option == nil then
+    error("setting: '" .. tostring(name) .. "' is not one of Hitboxes' options", 0)
+  end
+  if value ~= nil then option:value(value) end
+  return option:value()
+end
+
+-- A client without the addons collection offers no exports.
+pcall(function()
+  hafen.client():addons():export({setup = setup, setting = setting})
 end)
 
 -- An option's Changed handler runs inside the Options window's widget tree, and a mode change sweeps

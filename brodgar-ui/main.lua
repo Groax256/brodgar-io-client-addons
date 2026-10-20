@@ -38,3 +38,24 @@ end
 -- The rest take nothing: Quick Search opens its field in the middle of the screen, Actionbars starts its
 -- first bar centred on the bottom edge, and Hider, Hitboxes, Stockpile Take and Multi-Session are as their
 -- addons ship them.
+
+-- ---------------------------------------------------------------- the setup guide
+
+local Guide = BrodgarUI.Guide
+
+hafen.event():on("SessionEnteredWorld", Guide.openFirstTime)
+
+hafen.console():on("brodgarui", function()
+  hafen.timer():after(0, Guide.open)
+end)
+
+-- Options > AddOns > Brodgar UI: a button that opens the guide. The page stands in the Options window, so the
+-- guide is built on the next step.
+hafen.client():options():addon():panel(function(root)
+  root:gap(6)
+  hafen.ui():label():parent(root):text("Set up the client and the addons of Brodgar UI, one page at a time.")
+  local openButton = hafen.ui():button():parent(root):size(160):text("Open the setup guide")
+  openButton:on("Pressed", function()
+    hafen.timer():after(0, Guide.open)
+  end)
+end)

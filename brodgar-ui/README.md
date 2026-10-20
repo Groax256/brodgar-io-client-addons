@@ -18,6 +18,18 @@ Nine addons in one install, set up to work well together:
 2. Install it. All nine are installed and turned on, and you approve their permissions once.
 3. Don't want one of them? Turn it off in **AddOns ▸ Installed**. The rest keep working.
 
+## The setup guide
+
+The first time you enter the world, a window walks you through the setup, one page at a time:
+
+- **The client**: interface size, shadows, camera and volume.
+- **Theme**: how the client looks.
+- **Keys**: a key for every action of the nine addons.
+- A page for each addon with settings of its own.
+
+Every change applies at once, and **Skip** closes it. Open it again with `:brodgarui`, or from
+**Options ▸ AddOns ▸ Brodgar UI**. It asks for permission to change your client settings and keys.
+
 ## How it starts
 
 - The minimap in the top-right corner.
@@ -31,5 +43,5 @@ Move, resize or change any of them and your choice is kept.
 
 - Actionbars hides the client's belt, and its **Chat** button with it. Open and close the chat with
   `:simplechat`, or set a key in **Options ▸ Game ▸ Keybindings ▸ Simple Chat**.
-- Hider and Hitboxes have no key at first. Set one in **Options ▸ Game ▸ Keybindings**.
+- Hider and Hitboxes have no key at first. Set one in the setup guide, or in **Options ▸ Game ▸ Keybindings**.
 - Each addon has its own page with everything it does.

@@ -1,0 +1,12 @@
+{
+  "id": "gob-virtual-cache",
+  "name": "Gob Virtual Cache",
+  "version": "1.0.0",
+  "author": "brodgar",
+  "description": "Caches configured objects to local store and renders them as virtual ghosts when out of view.",
+  "api_version": "1.0",
+  "files": [
+    "main.lua"
+  ],
+  "permissions": []
+}

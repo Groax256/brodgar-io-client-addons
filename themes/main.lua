@@ -175,7 +175,32 @@ local function preset(values)
   end
 end
 
+-- ---------------------------------------------------------------- setup
+
+-- What a setup window -- a bundle's first-run guide -- shows for this addon: the theme, as a choice. nil while no
+-- theme is loaded. It is read when the window asks, after Load has declared the option.
+local function setup()
+  if themeOption == nil then return nil end
+  return {
+    title = "Theme",
+    summary = "How the client looks.",
+    settings = {
+      {name = "theme", label = "Theme", type = "choice", choices = order,
+       tooltip = 'the look the client wears -- "' .. DEFAULT .. '" is the client\'s own'},
+    },
+  }
+end
+
+-- Reads the setting, or writes value first: the option does the rest, as a pick in the dropdown does.
+local function setting(name, value)
+  if name ~= "theme" or themeOption == nil then
+    error("setting: '" .. tostring(name) .. "' is not one of Themes' settings", 0)
+  end
+  if value ~= nil then themeOption:value(value) end
+  return themeOption:value()
+end
+
 -- A client without the addons collection offers no exports: the client then starts in the theme picked.
 pcall(function()
-  hafen.client():addons():export({preset = preset})
+  hafen.client():addons():export({preset = preset, setup = setup, setting = setting})
 end)

@@ -1,0 +1,10 @@
+{
+  "id": "kith-kin-side-by-side",
+  "name": "Kith & Kin Side by Side",
+  "version": "1.0.0",
+  "author": "irongete",
+  "description": "Shows the Kin, Village and Realm tabs of the Kith & Kin window side by side, a line between them, and picking a player in one list picks them in the others",
+  "api_version": "1.0",
+  "files": ["main.lua", "selection.lua"],
+  "permissions": ["widget.value"]
+}
