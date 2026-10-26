@@ -83,6 +83,7 @@ version is a commit. If the upload fails the manifest is put back and nothing is
 | `simple-chat` | Replaces the client's chat with a window whose channels are tabs across the top, dragged by its body and resized from the bottom-right corner. Its System tab is a console line | `chat.send`, `console.run`, `widget.send` |
 | `simple-minimap` | Puts the corner minimap in a bare panel of its own, the claim, province and icon buttons in a row above it: no title, no close button, dragged from anywhere on it, sized by a grip in its corner, dressed by any theme that names it | — |
 | `stockpile-take` | Type how many items you want out of a stockpile and take them all with one press | `widget.send` |
+| `study-helper` | LP/hour in the study report, Study Desk LP and duration stock, curiosity LP/mental-weight badges, remaining-time estimates, remembered study slots and optional click protection | — |
 | `themes` | Loads whole client looks from JSON files in its own `themes/` folder and installs one | — |
 | `translations` | Displays the client in the language you pick in Options ▸ AddOns, and helps you write a new one: with the helper on, every string the language does not name yet is collected while you play, translated one by one in the translator window and exported as the JSON file a language ships as | — |
 | `trellis-builder` | Pick a block pile, a string pile and a patch of ground, press Start, and the character walks the route itself and fills the patch with trellises — as many per tile as the trellis's own footprint leaves room for | `player.move`, `gob.click`, `world.place`, `menugrid.use`, `widget.send` |
@@ -94,3 +95,61 @@ version is a commit. If the upload fails the manifest is put back and nothing is
 
 An addon with a `—` in the last column reads the game and writes only what is client-local; the others
 act on your behalf through the key they name, and the client asks you once before they may.
+
+## Study Helper
+
+Requires client API **1.9**, including native item-tooltip notes and metadata readiness. Build the updated client with `ant bin` and
+restart it completely; Lua reload alone cannot install the Java API. That build copies `study-helper`
+into `bin/addons/`. For another installation, copy the folder beside the updated client's jar as above.
+The addon requests no permissions. Its settings are under **Options ▸ AddOns ▸ Study Helper**.
+
+| Surface | Reading |
+|---|---|
+| Character sheet's Study Report | Extra **LP/h** beside the native attention, experience-cost and LP totals. Hover it for the exact combined rate and native totals. |
+| Study Desk | **Total LP** across its inventories, then each curiosity name's count and total full study duration. Green means at least 24 hours of stock; red means less. These status colours take precedence over theme text colours. This is stock, not time remaining or a refill schedule. |
+| Curiosity tooltip | Adds **LP/mental-weight**, LP/hour/mental-weight, LP/experience and, in an inventory, LP/hour/cell directly beneath the vanilla information, inside the same tooltip. Native LP, LP/hour, study duration and cost are not duplicated. No inline badges or separate badge tooltips. |
+| Studying curiosity | Keeps the native progress circle and other addons' indicators, with no extra text over the icon. Its **native item tooltip** includes estimated time remaining, prefixed `~`, when enabled and progress is available. This uses the last available progress fraction, not an authoritative countdown. |
+| Empty study slot | Dim resource icon remembering its last curiosity. Memory is per character and persists across restarts. A new item covering any part of a remembered footprint replaces that memory. |
+
+LP/hour is the **sum of each curiosity's `LP × 3600 / full study seconds`**. It is a nominal rate, not
+measured LP earned; it does not divide total LP by the longest duration. Times use the current client's
+seconds directly, not Purus's old `3.29` conversion. Soil Bonds and other non-curiosity study items
+contribute no LP and do not create an incomplete-rate warning. Like the native report, study totals use
+resolved curiosity profiles; incoming metadata updates the report when it becomes available. A resolved
+curiosity without a positive duration shows `?` for its rate; the combined rate shows `+` if some rates
+are known, or `?` if none are. Zero denominators in other ratios also show `?`.
+
+Study Desk membership and metadata changes are batched into the next UI step. While any currently
+present item's metadata is unresolved, the summary shows **Loading study information**, not a partial
+numeric total or a subset of the rows. Once all present items resolve, the total and rows appear together.
+Additional server arrivals update the summary normally; resource loading still takes time. Unchanged,
+resolved desks are not rescanned. Native layout changes trigger repacking without waiting for a periodic
+refresh. Unresolved metadata retains a one-second fallback. Study progress and Intelligence refresh once
+a second, with study changes also updating the report immediately.
+
+The optional **study click lock** blocks left clicks on study items, including Shift-transfer and
+Ctrl-drop. It does not block right-click actions, another addon's actions or server changes. Turn it off
+in Options to move a study item. The optional **completion log** reports a curiosity removed after its
+last sampled progress exceeded 99%; removal is only an inferred completion, never confirmation that LP
+was awarded. Both options default off.
+
+The client's study-curiosity comparison colouring remains unchanged. Study Helper does not move items,
+auto-refill a study inventory, or issue server actions.
+
+### Verify in game
+
+1. Put two curiosities with different durations in study. Hover **LP/h** and compare its sum with the
+   individual tooltip rates. Confirm the native totals remain visible, and `~`
+   appears in each studying curiosity's native tooltip once progress is available—not across its icon. A Soil Bond
+   must not add LP or an unknown-rate marker.
+2. Open a Study Desk with multiple curiosities, add and remove one, and check the LP total and grouped
+   stock durations without a one-second polling delay after metadata is available. Loading must show a
+   status rather than partial item rows. Check red below 24 hours and green at or above 24 hours, including
+   with a theme enabled. Close and reopen it; the summary must appear once and the window must not grow.
+3. Hover a curiosity in your backpack and wait for its full native tooltip. Compare the added ratios
+   with its vanilla LP, mental weight and experience cost. Turn tooltip efficiency details off and back
+   on in Options; vanilla information must remain unchanged.
+4. Enable the click lock and try a study item's left click, Shift-click and Ctrl-click. None should move
+   it. Disable the lock, remove it, and confirm its empty footprint shows the remembered dim icon.
+5. Switch characters and reload addons. Each study report and desk should retain one summary, and slot
+   memories must belong to the correct character. Disable Study Helper to remove its decorations.
