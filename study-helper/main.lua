@@ -64,18 +64,19 @@ end
 local function forgetIcon(state, icon)
   local record = state.icons[icon]
   if not record then return end
-  if record.changed then record.changed:off() end
-  if record.press then record.press:off() end
+  -- Unlink first: ending a subscription may re-enter this function, and it must then find nothing to do.
   state.icons[icon] = nil
-  state.notes[record.item] = state.notes[record.item] - 1
-  if state.notes[record.item] == 0 then
-    record.item:note(nil)
-    state.notes[record.item] = nil
+  for _, sub in ipairs(record.subs) do sub:off() end
+  -- The note belongs to the item, not to this icon. Another icon drawing it keeps it up to date.
+  for _, other in pairs(state.icons) do
+    if other.item == record.item then return end
   end
+  record.item:note(nil)
 end
 
 local function refreshIcon(state, icon, record)
-  if not icon:exists() then forgetIcon(state, icon); return end
+  -- A stale item refuses a non-empty note, so stop decorating it as soon as either side is gone.
+  if not icon:exists() or not record.item:exists() then forgetIcon(state, icon); return end
   local values = profile(record.item)
   local remaining = timers:value() and icon:parent() == state.inventory
       and metrics.remaining(values, record.item:progress()) or nil
@@ -87,18 +88,19 @@ local function decorate(state, icon)
   if state.icons[icon] or not icon:exists() then return end
   local item = icon:item()
   if not item then return end
-  local record = {item = item}
+  local record = {item = item, subs = {}}
   state.icons[icon] = record
-  state.notes[item] = (state.notes[item] or 0) + 1
   refreshIcon(state, icon, record)
-  if not icon:exists() then forgetIcon(state, icon); return end
-  record.changed = item:on("Changed", function()
-    refreshIcon(state, icon, record)
+  if state.icons[icon] ~= record then return end
+  record.subs[#record.subs + 1] = item:on("Changed", function()
+    if state.icons[icon] == record then refreshIcon(state, icon, record) end
   end)
-  record.press = icon:on("MouseDown", function(event)
+  record.subs[#record.subs + 1] = icon:on("MouseDown", function(event)
     if locked:value() and event:button() == 1 and state.studying[item] then event:preventDefault() end
   end)
-  icon:on("Removed", function() forgetIcon(state, icon) end)
+  -- Removed fires at once on a widget that is already gone, so the record may be forgotten by now.
+  local removed = icon:on("Removed", function() forgetIcon(state, icon) end)
+  if state.icons[icon] == record then record.subs[#record.subs + 1] = removed else removed:off() end
 end
 
 -- The native StudyInfo already prints LP, attention/Intelligence and EXP cost. Use its empty vertical
@@ -304,9 +306,11 @@ local function refreshStudy(state)
   local attribute = state.session:char():attr():get("int")
   local intelligence = attribute and attribute:composite()
   local rate = total.known == 0 and total.unknown > 0 and "?" or metrics.number(total.rate)
+  -- Every summary field is optional, so a total can be missing while the tab builds.
   local tip = "Nominal LP/hour: " .. rate .. "\nTotal LP: " .. metrics.number(native.lp)
-      .. "\nAttention: " .. native.attention .. "/" .. metrics.number(intelligence)
-      .. "\nExperience cost: " .. native.cost .. "\nSum of each resolved curiosity's LP / full duration."
+      .. "\nAttention: " .. metrics.number(native.attention) .. "/" .. metrics.number(intelligence)
+      .. "\nExperience cost: " .. metrics.number(native.cost)
+      .. "\nSum of each resolved curiosity's LP / full duration."
       .. (total.unknown > 0 and "\nCuriosities without a study duration: " .. total.unknown .. "." or "")
   local caption = (rate == "?" and "?" or metrics.compact(total.rate) .. (total.unknown > 0 and "+" or "")) .. " LP/h"
   for panel, view in pairs(state.panels) do
@@ -326,7 +330,7 @@ local function refreshStudy(state)
   end
   state.ghosts = ghosts
   if state.memoryGrid ~= inventory then
-    if state.memoryGrid then state.memoryGrid:overlay():remove("memory") end
+    if state.memoryGrid and state.memoryGrid:exists() then state.memoryGrid:overlay():remove("memory") end
     state.memoryGrid = inventory
     inventory:overlay():add("memory"):draw(function(graphics)
       graphics:color(180, 160, 70, 90)
@@ -346,14 +350,14 @@ local function forgetSession(session)
   for icon in pairs(state.icons) do forgetIcon(state, icon) end
   for _, view in pairs(state.panels) do view.label:destroy() end
   for window in pairs(state.desks) do forgetDesk(state, window) end
-  if state.memoryGrid then state.memoryGrid:overlay():remove("memory") end
+  if state.memoryGrid and state.memoryGrid:exists() then state.memoryGrid:overlay():remove("memory") end
   sessions[session] = nil
 end
 
 local function watchSession(session)
   forgetSession(session)
   if not session:character() then return end
-  local state = {session = session, icons = {}, notes = {}, panels = {}, desks = {}, studying = {}, previous = {},
+  local state = {session = session, icons = {}, panels = {}, desks = {}, studying = {}, previous = {},
                  ghosts = {}, subs = {}, history = session:store():var("study-slots")}
   sessions[session] = state
   local tree = session:ui()
