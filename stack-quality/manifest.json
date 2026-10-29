@@ -1,0 +1,9 @@
+{
+  "id": "stack-quality",
+  "name": "Stack Quality",
+  "version": "1.0.0",
+  "author": "Groax",
+  "description": "The average quality of a stack: on its icon, and as a line in its tooltip.",
+  "api_version": "1.9",
+  "files": ["main.lua"]
+}

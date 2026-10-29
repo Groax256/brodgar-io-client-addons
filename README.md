@@ -83,6 +83,7 @@ version is a commit. If the upload fails the manifest is put back and nothing is
 | `session-manager` | One row per login the client holds: go to that character, log it out, or cycle to the next with a hotkey | `session.close` |
 | `simple-chat` | Replaces the client's chat with a window whose channels are tabs across the top, dragged by its body and resized from the bottom-right corner. Its System tab is a console line | `chat.send`, `console.run`, `widget.send` |
 | `simple-minimap` | Puts the corner minimap in a bare panel of its own, the claim, province and icon buttons in a row above it: no title, no close button, dragged from anywhere on it, sized by a grip in its corner, dressed by any theme that names it | — |
+| `stack-quality` | The average quality of what a stack holds, as a number on its icon drawn the way the game draws an item's own quality, in the corner picked in Options ▸ AddOns, and as a line in its tooltip | — |
 | `stockpile-take` | Type how many items you want out of a stockpile and take them all with one press | `widget.send` |
 | `study-helper` | LP/hour in the study report, Study Desk LP and duration stock, curiosity LP/mental-weight badges, remaining-time estimates, remembered study slots and optional click protection | — |
 | `themes` | Loads whole client looks from JSON files in its own `themes/` folder and installs one | — |
