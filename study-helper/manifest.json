@@ -4,6 +4,6 @@
   "version": "1.0.0",
   "author": "Groax",
   "description": "Study LP/hour, desk stock totals, native curiosity tooltip details and remembered study slots.",
-  "api_version": "1.9",
+  "api_version": "1.8",
   "files": ["metrics.lua", "main.lua"]
 }

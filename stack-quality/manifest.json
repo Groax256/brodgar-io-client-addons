@@ -4,6 +4,6 @@
   "version": "1.0.0",
   "author": "Groax",
   "description": "The average quality of a stack: on its icon, and as a line in its tooltip.",
-  "api_version": "1.9",
+  "api_version": "1.8",
   "files": ["main.lua"]
 }
