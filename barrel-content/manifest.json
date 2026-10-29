@@ -1,0 +1,9 @@
+{
+  "id": "barrel-content",
+  "name": "Barrel Content",
+  "version": "1.0.0",
+  "author": "Groax",
+  "description": "Shows what every barrel in view holds, as a label over the barrel. Colour, size, background and height are set in Options > AddOns > Barrel Content.",
+  "api_version": "1.8",
+  "files": ["main.lua"]
+}
