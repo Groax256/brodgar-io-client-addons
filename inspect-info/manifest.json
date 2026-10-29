@@ -1,0 +1,11 @@
+{
+  "id": "inspect-info",
+  "name": "Inspect Info",
+  "version": "1.0.0",
+  "author": "Groax",
+  "description": "While the Inspect cursor is up, names the resource of whatever the pointer is on -- any object, or the ground's tile. Adds the resource name to the game's own Inspect answer, and writes the quality an inspection reveals over the object, where it stays. Set in Options > AddOns > Inspect Info.",
+  "api_version": "1.8",
+  "files": [
+    "main.lua"
+  ]
+}

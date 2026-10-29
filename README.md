@@ -70,6 +70,7 @@ version is a commit. If the upload fails the manifest is put back and nothing is
 | `hitboxes` | Draws the footprint of every game object in view, and of the building you are placing, on the ground — hidden by what stands in front of it, or drawn through everything; one key cycles the modes | — |
 | `hud` | Health, stamina and energy as three flat bars of their own, each placed with ALT and a drag and sized and coloured by a slider apiece; switched on, the client's own three meters are hidden | — |
 | `immersion` | Labels the nearest game object within a 180-degree cone in front of the character on screen with a floating "this", following it as you move and clearing it when nothing qualifies | `gob.click` |
+| `inspect-info` | While the Inspect cursor is up, a tooltip names the resource of whatever the pointer is on, any object or the ground's tile; adds the resource name to the game's own Inspect answer, and writes the quality an inspection reveals over the object as *q23*, kept through leaving view and a relog; colour, size, a dark background and the height set in Options ▸ AddOns | — |
 | `inspector-gadget` | A magnifying glass in the action menu | `menugrid.use`, `gob.click` |
 | `item-drop-protection` | With an item on the cursor: left click walks, Ctrl+left click drops | `player.move`, `widget.send` |
 | `item-indicators` | Two readings on every item icon: the quality it states, and the durability it has left | — |

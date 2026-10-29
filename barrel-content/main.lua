@@ -34,7 +34,7 @@ local showOption = options:boolean("show"):default(true):add()
 local showEmptyOption = options:boolean("show-empty"):default(false):add()
 local textColorOption = options:choice("text-color"):choices(TEXT_COLOR_NAMES):default("White"):add()
 local textSizeOption = options:number("text-size"):range(8, 24):default(11):add()
-local backgroundOption = options:boolean("background"):default(false):add()
+local backgroundOption = options:boolean("background"):default(true):add()
 local backgroundOpacityOption = options:number("background-opacity"):range(10, 100):default(60):add()  -- percent
 local heightOption = options:number("height"):range(0, 40):default(15):add()   -- world units up the barrel
 
