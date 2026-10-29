@@ -1,0 +1,10 @@
+{
+  "id": "closest-door",
+  "name": "Closest Door",
+  "version": "1.0.0",
+  "author": "Groax",
+  "description": "One key (Shift+A unless you change it) goes through the nearest door, ladder, staircase, cellar or cave entrance.",
+  "api_version": "1.1",
+  "files": ["main.lua"],
+  "permissions": ["widget.send", "client.settings"]
+}
