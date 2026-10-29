@@ -77,6 +77,7 @@ version is a commit. If the upload fails the manifest is put back and nothing is
 | `paint` | Draw on the ground with the mouse | — |
 | `perf-hud` | Displays frames per second and JVM heap memory usage in a compact draggable window | — |
 | `profiler` | Where the frame went — a six-tab window over `hafen.client():profiling()` with the frame graph and phases, render passes and GL counters, per-widget and per-addon cost, the pull-only counters and the overhead accounting | `client.settings` |
+| `quick-pick` | Q picks up the nearest critter or herb within reach: right-clicks it and takes Pick off the menu before it is drawn, skipping the large animals a right-click would only walk you up to | `gob.click`, `flowermenu.select`, `client.settings` |
 | `quick-search` | Press Ctrl+Space, type part of an action's name and run it without opening the action menu | `menugrid.use`, `client.settings`, `console.run` |
 | `resourcestack` | Every resource the client holds, as a searchable list — pick one and the panel shows its version, a preview of its image and every layer with what `layer:info()` decodes (image geometry, tooltip and pagina text, audio volume, neg and obst rings, anim frames, props and meta); Fetch asks the client for a name it has not loaded yet and follows the load or its error | — |
 | `session-manager` | One row per login the client holds: go to that character, log it out, or cycle to the next with a hotkey | `session.close` |

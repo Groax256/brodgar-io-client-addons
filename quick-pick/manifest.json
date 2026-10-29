@@ -1,0 +1,10 @@
+{
+  "id": "quick-pick",
+  "name": "Quick Pick",
+  "version": "1.0.0",
+  "author": "Groax",
+  "description": "One key (Q unless you change it) picks up the nearest critter or herb within reach: right-clicks it and takes Pick when a menu offers it.",
+  "api_version": "1.0",
+  "files": ["main.lua"],
+  "permissions": ["gob.click", "flowermenu.select", "client.settings"]
+}

@@ -2,7 +2,7 @@
   "id": "study-helper",
   "name": "Study Helper",
   "version": "1.0.0",
-  "author": "irongete",
+  "author": "Groax",
   "description": "Study LP/hour, desk stock totals, native curiosity tooltip details and remembered study slots.",
   "api_version": "1.9",
   "files": ["metrics.lua", "main.lua"]
