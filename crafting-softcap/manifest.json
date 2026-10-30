@@ -1,0 +1,9 @@
+{
+  "id": "crafting-softcap",
+  "name": "Crafting Softcap",
+  "version": "1.0.0",
+  "author": "Groax",
+  "description": "In the recipe window: your value for each stat the product's quality draws on, on its icon, and the softcap they make.",
+  "api_version": "1.8",
+  "files": ["main.lua"]
+}
